@@ -28,7 +28,7 @@ SOFTWARE.
                   full duplex SPI transactions.
 *  Note        : This Library has been tested to work in all the modes i.e. SPI_MODE0, SPI_MODE1,
 *                SPI_MODE2 and SPI_MODE3. At present, this Library only supports spidev1.0, however
-*                it can be extended to support other spidev1.x or spidev2.x as well. 
+*                it can be extended to support other spidev1.x or spidev2.x as well.
 */
 
 /*Custom Libs Includes*/
@@ -60,10 +60,10 @@ unsigned char RX_spi[SPIDEV_BYTES_NUM];
  ****************************************************************/
 int Open_device(char *spi_dev_path, int *fd)
 {
-	if ((*fd = open(spi_dev_path, O_RDWR)) < 0)
-		return -1;
-	else
-		return 0;
+    if ((*fd = open(spi_dev_path, O_RDWR)) < 0)
+        return -1;
+    else
+        return 0;
 }
 
 /****************************************************************
@@ -75,12 +75,12 @@ int Open_device(char *spi_dev_path, int *fd)
  ****************************************************************/
 int Set_SPI_mode(int fd, unsigned char spi_mode)
 {
-	int ret = 0;
-	if (ioctl(fd, SPI_IOC_WR_MODE, &spi_mode) == -1)
-		ret = -1;
-	if (ioctl(fd, SPI_IOC_RD_MODE, &spi_mode) == -1)
-		ret = -1;
-	return (ret);
+    int ret = 0;
+    if (ioctl(fd, SPI_IOC_WR_MODE, &spi_mode) == -1)
+        ret = -1;
+    if (ioctl(fd, SPI_IOC_RD_MODE, &spi_mode) == -1)
+        ret = -1;
+    return (ret);
 }
 
 /****************************************************************
@@ -92,12 +92,12 @@ int Set_SPI_mode(int fd, unsigned char spi_mode)
  ****************************************************************/
 int Set_SPI_bits(int fd, unsigned char bits_per_word)
 {
-	int ret = 0;
-	if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_per_word) == -1)
-		ret = -1;
-	if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word) == -1)
-		ret = -1;
-	return (ret);
+    int ret = 0;
+    if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_per_word) == -1)
+        ret = -1;
+    if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word) == -1)
+        ret = -1;
+    return (ret);
 }
 
 /****************************************************************
@@ -109,12 +109,12 @@ int Set_SPI_bits(int fd, unsigned char bits_per_word)
  ****************************************************************/
 int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
 {
-	int ret = 0;
-	if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &bus_speed_HZ) == -1)
-		ret = -1;
-	if (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &bus_speed_HZ) == -1)
-		ret = -1;
-	return (ret);
+    int ret = 0;
+    if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &bus_speed_HZ) == -1)
+        ret = -1;
+    if (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &bus_speed_HZ) == -1)
+        ret = -1;
+    return (ret);
 }
 
 /****************************************************************
@@ -132,17 +132,17 @@ int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
  *               configuration structure.
  ****************************************************************/
 void SPI_Config_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
-		unsigned char chip_select, unsigned short spi_delay,
-		unsigned char spi_bits_No, unsigned char mode_spi, SPI_DevicePtr SPI_devicePtr)
+                     unsigned char chip_select, unsigned short spi_delay,
+                     unsigned char spi_bits_No, unsigned char mode_spi, SPI_DevicePtr SPI_devicePtr)
 {
-	SPI_devicePtr->spi_bytes_num = spi_bytes_no;
-	SPI_devicePtr->spi_bus_speedHZ = spi_bus_speed;
-	SPI_devicePtr->ss_change = chip_select;
-	SPI_devicePtr->spi_delay_us = spi_delay;
-	SPI_devicePtr->spi_data_bits_No = spi_bits_No;
-	SPI_devicePtr->spi_mode = mode_spi;
-	SPI_devicePtr->fd_spi = 0;
-	SPI_devicePtr->spi_dev_path = NULL;
+    SPI_devicePtr->spi_bytes_num = spi_bytes_no;
+    SPI_devicePtr->spi_bus_speedHZ = spi_bus_speed;
+    SPI_devicePtr->ss_change = chip_select;
+    SPI_devicePtr->spi_delay_us = spi_delay;
+    SPI_devicePtr->spi_data_bits_No = spi_bits_No;
+    SPI_devicePtr->spi_mode = mode_spi;
+    SPI_devicePtr->fd_spi = 0;
+    SPI_devicePtr->spi_dev_path = NULL;
 }
 
 /****************************************************************
@@ -155,51 +155,51 @@ int SPI_DEV1_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
                   unsigned char chip_select, unsigned short spi_delay,
                   unsigned char spi_bits_No, unsigned char mode_spi)
 {
-	/* Initialize the parameters for spidev1.0 structure */
-	SPI_Config_init(spi_bytes_no, spi_bus_speed, chip_select,
-			        spi_delay, spi_bits_No, mode_spi, &SPI_device1);
+    /* Initialize the parameters for spidev1.0 structure */
+    SPI_Config_init(spi_bytes_no, spi_bus_speed, chip_select,
+                    spi_delay, spi_bits_No, mode_spi, &SPI_device1);
 
-	/* Assign the path to the spidev1.0 for use */
-	SPI_device1.spi_dev_path = SPIDEV1_PATH;
+    /* Assign the path to the spidev1.0 for use */
+    SPI_device1.spi_dev_path = SPIDEV1_PATH;
 
-	/* Open the spidev1.0 device */
-	if (Open_device(SPI_device1.spi_dev_path, &SPI_device1.fd_spi) == -1) {
-		perror("SPI: Failed to open spidev1.0 |");
-		return -1;
-	}
+    /* Open the spidev1.0 device */
+    if (Open_device(SPI_device1.spi_dev_path, &SPI_device1.fd_spi) == -1) {
+        perror("SPI: Failed to open spidev1.0 |");
+        return -1;
+    }
 
-	/* Set the SPI mode for RD and WR operations */
-	if (Set_SPI_mode(SPI_device1.fd_spi, SPI_device1.spi_mode) == -1) {
-		perror("SPI: Failed to set SPIMODE |");
-		return -1;
-	}
+    /* Set the SPI mode for RD and WR operations */
+    if (Set_SPI_mode(SPI_device1.fd_spi, SPI_device1.spi_mode) == -1) {
+        perror("SPI: Failed to set SPIMODE |");
+        return -1;
+    }
 
-	/* Set the No. of bits per transaction */
-	if (Set_SPI_bits(SPI_device1.fd_spi, SPI_device1.spi_data_bits_No) == -1) {
-		perror("SPI: Failed to set No. of bits per word |");
-		return -1;
-	}
+    /* Set the No. of bits per transaction */
+    if (Set_SPI_bits(SPI_device1.fd_spi, SPI_device1.spi_data_bits_No) == -1) {
+        perror("SPI: Failed to set No. of bits per word |");
+        return -1;
+    }
 
-	/* Set the SPI bus speed in Hz */
-	if (Set_SPI_bits(SPI_device1.fd_spi, SPI_device1.spi_bus_speedHZ) == -1) {
-		perror("SPI: Failed to set SPI bus frequency |");
-		return -1;
-	}
+    /* Set the SPI bus speed in Hz */
+    if (Set_SPI_bits(SPI_device1.fd_spi, SPI_device1.spi_bus_speedHZ) == -1) {
+        perror("SPI: Failed to set SPI bus frequency |");
+        return -1;
+    }
 
-	/* Initialize the spi_ioc_transfer structure that will be passed to the
-	 * KERNEL to define/configure each SPI Transactions*/
-	transfer_spidev1.tx_buf = 0;
-	transfer_spidev1.rx_buf = 0;
-	transfer_spidev1.pad = 0;
-	transfer_spidev1.tx_nbits = 0;
-	transfer_spidev1.rx_nbits = 0;
-	transfer_spidev1.len = SPI_device1.spi_bytes_num;
-	transfer_spidev1.speed_hz = SPI_device1.spi_bus_speedHZ;
-	transfer_spidev1.delay_usecs = SPI_device1.spi_delay_us;
-	transfer_spidev1.bits_per_word = SPI_device1.spi_data_bits_No;
-	transfer_spidev1.cs_change = SPI_device1.ss_change;
+    /* Initialize the spi_ioc_transfer structure that will be passed to the
+     * KERNEL to define/configure each SPI Transactions*/
+    transfer_spidev1.tx_buf = 0;
+    transfer_spidev1.rx_buf = 0;
+    transfer_spidev1.pad = 0;
+    transfer_spidev1.tx_nbits = 0;
+    transfer_spidev1.rx_nbits = 0;
+    transfer_spidev1.len = SPI_device1.spi_bytes_num;
+    transfer_spidev1.speed_hz = SPI_device1.spi_bus_speedHZ;
+    transfer_spidev1.delay_usecs = SPI_device1.spi_delay_us;
+    transfer_spidev1.bits_per_word = SPI_device1.spi_data_bits_No;
+    transfer_spidev1.cs_change = SPI_device1.ss_change;
 
-	return 0;
+    return 0;
 }
 
 /****************************************************************
@@ -213,21 +213,21 @@ int SPI_DEV1_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
  * NOTE          : Good for multiple transactions
  ****************************************************************/
 int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
-		             unsigned char bytes_num)
+                     unsigned char bytes_num)
 {
-	/* Points to the Tx and Rx buffer */
-	transfer_spidev1.tx_buf = (unsigned long)send;
-	transfer_spidev1.rx_buf = (unsigned long)receive;
+    /* Points to the Tx and Rx buffer */
+    transfer_spidev1.tx_buf = (unsigned long)send;
+    transfer_spidev1.rx_buf = (unsigned long)receive;
 
-	/* Override No. of bytes per transaction */
-	transfer_spidev1.len = bytes_num;
+    /* Override No. of bytes per transaction */
+    transfer_spidev1.len = bytes_num;
 
-	/* Perform a SPI Transaction */
-	if (ioctl(SPI_device1.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev1) < 0) {
-		perror("SPI: SPI_IOC_MESSAGE Failed |");
-		return -1;
-	}
-	return 0;
+    /* Perform a SPI Transaction */
+    if (ioctl(SPI_device1.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev1) < 0) {
+        perror("SPI: SPI_IOC_MESSAGE Failed |");
+        return -1;
+    }
+    return 0;
 }
 
 /****************************************************************
@@ -240,20 +240,20 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
  ****************************************************************/
 unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
 {
-	unsigned char rec_byte = 0;
+    unsigned char rec_byte = 0;
 
-	/* Override No. of bytes to send and receive one byte */
-	transfer_spidev1.len = SPI_ONE_BYTE;
+    /* Override No. of bytes to send and receive one byte */
+    transfer_spidev1.len = SPI_ONE_BYTE;
 
-	/* Points to the address of Tx and Rx variable  */
-	transfer_spidev1.tx_buf = (unsigned long)&data_byte;
-	transfer_spidev1.rx_buf = (unsigned long)&rec_byte;
+    /* Points to the address of Tx and Rx variable  */
+    transfer_spidev1.tx_buf = (unsigned long)&data_byte;
+    transfer_spidev1.rx_buf = (unsigned long)&rec_byte;
 
-	/* Perform an SPI Transaction */
-	if (ioctl(SPI_device1.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev1) < 0) {
-		perror("SPI: SPI_IOC_MESSAGE Failed |");
-		rec_byte = -1;
-	}
+    /* Perform an SPI Transaction */
+    if (ioctl(SPI_device1.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev1) < 0) {
+        perror("SPI: SPI_IOC_MESSAGE Failed |");
+        rec_byte = -1;
+    }
 
-	return (rec_byte);
+    return (rec_byte);
 }

@@ -32,24 +32,24 @@
 #include <stdint.h>
 
 enum TSlushIOPorts {
-	SLUSH_IO_PORTA = 0,
-	SLUSH_IO_PORTB = 1
+    SLUSH_IO_PORTA = 0,
+    SLUSH_IO_PORTB = 1
 };
 
 enum TSlushIOPins {
-	SLUSH_IO_PIN0 = 0,
-	SLUSH_IO_PIN1,
-	SLUSH_IO_PIN2,
-	SLUSH_IO_PIN3,
-	SLUSH_IO_PIN4,
-	SLUSH_IO_PIN5,
-	SLUSH_IO_PIN6,
-	SLUSH_IO_PIN7
+    SLUSH_IO_PIN0 = 0,
+    SLUSH_IO_PIN1,
+    SLUSH_IO_PIN2,
+    SLUSH_IO_PIN3,
+    SLUSH_IO_PIN4,
+    SLUSH_IO_PIN5,
+    SLUSH_IO_PIN6,
+    SLUSH_IO_PIN7
 };
 
 enum TSlushIOFSel {
-	SLUSH_IO_FSEL_OUTP = 0,
-	SLUSH_IO_FSEL_INPT = 1
+    SLUSH_IO_FSEL_OUTP = 0,
+    SLUSH_IO_FSEL_INPT = 1
 };
 
 #define SLUSH_L6470_RESET		23 // RPI_V2_GPIO_P1_38
@@ -71,38 +71,39 @@ enum TSlushIOFSel {
 
 #define SLUSH_MTR_FLAG			13
 
-class SlushBoard {
+class SlushBoard
+{
 public:
-	SlushBoard(void);
-	~SlushBoard(void);
+    SlushBoard(void);
+    ~SlushBoard(void);
 
-	void setIOState(uint8_t, uint8_t, uint8_t);
-	uint8_t getIOState(uint8_t, uint8_t);
+    void setIOState(uint8_t, uint8_t, uint8_t);
+    uint8_t getIOState(uint8_t, uint8_t);
 
-	uint16_t getTempRaw(void);
-	float getTemprature(void);
+    uint16_t getTempRaw(void);
+    float getTemprature(void);
 
 private:
-	float calcTemp(uint16_t);
+    float calcTemp(uint16_t);
 
 public:
-	void setIOState(TSlushIOPorts, TSlushIOPins, uint8_t);
-	uint8_t getIOState(TSlushIOPorts, TSlushIOPins);
+    void setIOState(TSlushIOPorts, TSlushIOPins, uint8_t);
+    uint8_t getIOState(TSlushIOPorts, TSlushIOPins);
 
-	uint8_t IORead(TSlushIOPorts);
-	void IOWrite(TSlushIOPorts, uint8_t);
+    uint8_t IORead(TSlushIOPorts);
+    void IOWrite(TSlushIOPorts, uint8_t);
 
-	void IOFSel(TSlushIOPorts, TSlushIOPins, TSlushIOFSel);
-	void IOClr(TSlushIOPorts, TSlushIOPins);
-	void IOSet(TSlushIOPorts, TSlushIOPins);
-	uint8_t IOLev(TSlushIOPorts, TSlushIOPins);
+    void IOFSel(TSlushIOPorts, TSlushIOPins, TSlushIOFSel);
+    void IOClr(TSlushIOPorts, TSlushIOPins);
+    void IOSet(TSlushIOPorts, TSlushIOPins);
+    uint8_t IOLev(TSlushIOPorts, TSlushIOPins);
 
 private:
-	void InitSpi(void);
-	void InitI2c(void);
-	void I2cSetup(uint8_t);
-	uint8_t Mcp23017ReadReg(uint8_t);
-	void Mcp23017WriteReg(uint8_t, uint8_t);
+    void InitSpi(void);
+    void InitI2c(void);
+    void I2cSetup(uint8_t);
+    uint8_t Mcp23017ReadReg(uint8_t);
+    void Mcp23017WriteReg(uint8_t, uint8_t);
 };
 
 #endif /* SLUSHBOARD_H_ */

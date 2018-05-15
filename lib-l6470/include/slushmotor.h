@@ -34,40 +34,41 @@
 
 #include "l6470.h"
 
-class SlushMotor: public L6470 {
+class SlushMotor: public L6470
+{
 public:
-	SlushMotor(int, bool bUseSPI = true);
-	~SlushMotor(void);
+    SlushMotor(int, bool bUseSPI = true);
+    ~SlushMotor(void);
 
-	int busyCheck(void);
+    int busyCheck(void);
 
-	/*
-	 * Roboteurs Slushengine Phyton compatible methods
-	 */
-	int isBusy(void);
+    /*
+     * Roboteurs Slushengine Phyton compatible methods
+     */
+    int isBusy(void);
 
-	void setOverCurrent(unsigned int);
-	void setAsHome(void);
+    void setOverCurrent(unsigned int);
+    void setAsHome(void);
 
-	void softFree(void);
-	void free(void);
+    void softFree(void);
+    void free(void);
 
-	/*
-	 * Additional methods
-	 */
-	bool GetUseSpiBusy(void) const;
-	void SetUseSpiBusy(bool);
-	bool IsConnected(void) const;
-
-private:
-	uint8_t SPIXfer(uint8_t);
+    /*
+     * Additional methods
+     */
+    bool GetUseSpiBusy(void) const;
+    void SetUseSpiBusy(bool);
+    bool IsConnected(void) const;
 
 private:
-	int m_nSpiChipSelect;
-	int m_nBusyPin;
-	bool m_bUseSpiBusy;
-	bool m_bIsBusy;
-	bool m_bIsConnected;
+    uint8_t SPIXfer(uint8_t);
+
+private:
+    int m_nSpiChipSelect;
+    int m_nBusyPin;
+    bool m_bUseSpiBusy;
+    bool m_bIsBusy;
+    bool m_bIsConnected;
 };
 
 #endif /* SLUSHMOTOR_H_ */

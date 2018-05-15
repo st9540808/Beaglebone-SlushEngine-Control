@@ -23,7 +23,7 @@ SOFTWARE.
 *
 *  Created on: Sep 4, 2017
 *  Author: Vinay Divakar
-*/ 
+*/
 
 #ifndef SPI_H_
 #define SPI_H_
@@ -48,22 +48,22 @@ SOFTWARE.
 
 /* Enum SPI Modes*/
 typedef enum {
-	SPI_MODE0 = 0,
-	SPI_MODE1 = 1,
-	SPI_MODE2 = 2,
-	SPI_MODE3 = 3
+    SPI_MODE0 = 0,
+    SPI_MODE1 = 1,
+    SPI_MODE2 = 2,
+    SPI_MODE3 = 3
 } SPI_MODE;
 
 /*SPI device configuration structure*/
 typedef struct {
-	char* spi_dev_path;
-	int fd_spi;
-	unsigned long spi_bytes_num;
-	unsigned long spi_bus_speedHZ;
-	unsigned char ss_change;
-	unsigned short spi_delay_us;
-	unsigned char spi_data_bits_No;
-	unsigned char spi_mode;
+    char* spi_dev_path;
+    int fd_spi;
+    unsigned long spi_bytes_num;
+    unsigned long spi_bus_speedHZ;
+    unsigned char ss_change;
+    unsigned short spi_delay_us;
+    unsigned char spi_data_bits_No;
+    unsigned char spi_mode;
 } SPI_DeviceT, *SPI_DevicePtr;
 
 /* SPI API's*/

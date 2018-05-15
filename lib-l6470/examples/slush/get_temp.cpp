@@ -1,5 +1,5 @@
 /**
- * @file l6470.cpp
+ * @file get_temp.cpp
  *
  */
 /* Copyright (C) 2017 by Arjan van Vught mailto:info@raspberrypi-dmx.nl
@@ -23,24 +23,16 @@
  * THE SOFTWARE.
  */
 
-#include "l6470.h"
-#include "l6470constants.h"
+#include <stdio.h>
 
-L6470::~L6470(void)
-{}
+#include "slushboard.h"
 
-void L6470::setMicroSteps(unsigned int nMicroSteps)
+int main(int argc, char **argv)
 {
-    hardHiZ();
+    SlushBoard SlushEngine;
 
-    unsigned int stepVal = 0;
+    printf("getTempRaw = 0x%.4x\n", SlushEngine.getTempRaw());
+    printf("getTemprature = %f\n", SlushEngine.getTemprature());
 
-    for (stepVal = 0; stepVal < 8; stepVal++) {
-        if (nMicroSteps == 1) {
-            break;
-        }
-        nMicroSteps = nMicroSteps >> 1;
-    }
-
-    setParam(L6470_PARAM_STEP_MODE, stepVal | L6470_SYNC_SEL_1);
+    return 0;
 }
