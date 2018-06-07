@@ -30,6 +30,22 @@
 #define SLUSHBOARD_H_
 
 #include <stdint.h>
+#include <errno.h>
+#include <stdlib.h>
+
+#define FATAL(str)                                             \
+    do {                                                       \
+        fprintf(stderr, "Error at line %d, file %s (%d)\n",    \
+                __LINE__, __FILE__, errno);                    \
+        perror(str); exit(1);                                  \
+    } while (0)
+
+#ifdef DEBUG
+ #define DEBUG_PRINT(fmt, args...) fprintf(stderr, \
+    "DEBUG: %s:%d:%s(): " fmt, __FILE__, __LINE__, __func__, ##args)
+#else
+ #define DEBUG_PRINT(fmt, args...) do {} while (0)
+#endif
 
 enum TSlushIOPorts {
     SLUSH_IO_PORTA = 0,

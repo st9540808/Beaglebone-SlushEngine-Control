@@ -43,7 +43,7 @@ public:
     int busyCheck(void);
 
     /*
-     * Roboteurs Slushengine Phyton compatible methods
+     * Roboteurs Slushengine Python compatible methods
      */
     int isBusy(void);
 

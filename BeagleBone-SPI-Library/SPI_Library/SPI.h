@@ -43,7 +43,7 @@ SOFTWARE.
 
 /*Definitions specific to spidev1.0 */
 #define SPIDEV1_PATH                     "/dev/spidev1.0"
-#define SPIDEV1_BUS_SPEED_HZ             500000
+#define SPIDEV1_BUS_SPEED_HZ             5000000 // 5Mhz
 
 
 /* Enum SPI Modes*/

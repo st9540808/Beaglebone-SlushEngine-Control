@@ -1,34 +1,34 @@
 /*
-MIT License
+    MIT License
 
-Copyright (c) 2017 DeeplyEmbedded
+    Copyright (c) 2017 DeeplyEmbedded
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-* SPI.c
-*
-*  Created on  : September 5, 2017
-*  Author      : Vinay Divakar
-*  Description : This is an SPI Library for the BeagleBone that consists of the API's to enable
-                  full duplex SPI transactions.
-*  Note        : This Library has been tested to work in all the modes i.e. SPI_MODE0, SPI_MODE1,
-*                SPI_MODE2 and SPI_MODE3. At present, this Library only supports spidev1.0, however
-*                it can be extended to support other spidev1.x or spidev2.x as well.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    * SPI.c
+    *
+    *  Created on  : September 5, 2017
+    *  Author      : Vinay Divakar
+    *  Description : This is an SPI Library for the BeagleBone that consists of the API's to enable
+                    full duplex SPI transactions.
+    *  Note        : This Library has been tested to work in all the modes i.e. SPI_MODE0, SPI_MODE1,
+    *                SPI_MODE2 and SPI_MODE3. At present, this Library only supports spidev1.0, however
+    *                it can be extended to support other spidev1.x or spidev2.x as well.
 */
 
 /*Custom Libs Includes*/
@@ -45,7 +45,7 @@ SOFTWARE.
 
 /* Static objects for spidev1.0 */
 static SPI_DeviceT SPI_device1;
-static struct spi_ioc_transfer	transfer_spidev1;
+static struct spi_ioc_transfer transfer_spidev1;
 
 /* Globals */
 unsigned char TX_spi[SPIDEV_BYTES_NUM];
@@ -181,7 +181,7 @@ int SPI_DEV1_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     }
 
     /* Set the SPI bus speed in Hz */
-    if (Set_SPI_bits(SPI_device1.fd_spi, SPI_device1.spi_bus_speedHZ) == -1) {
+    if (Set_SPI_speed(SPI_device1.fd_spi, SPI_device1.spi_bus_speedHZ) == -1) {
         perror("SPI: Failed to set SPI bus frequency |");
         return -1;
     }

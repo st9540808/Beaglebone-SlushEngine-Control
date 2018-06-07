@@ -91,7 +91,6 @@ enum TL6470ParamRegisters {
 
 class L6470
 {
-
 public:
     virtual ~L6470(void);
     virtual int busyCheck()=0;
