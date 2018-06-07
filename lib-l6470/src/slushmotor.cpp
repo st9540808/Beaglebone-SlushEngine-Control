@@ -35,14 +35,6 @@ extern "C" {
     #include "SPI.h"
 }
 
-#if defined(__linux__)
-#elif defined(__circle__)
-#else
-//  #include "bcm2835_gpio.h"
-//  #include "bcm2835_spi.h"
-//  #include "bcm2835_i2c.h"
-#endif
-
 #include "slushmotor.h"
 #include "slushboard.h"
 
@@ -52,6 +44,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
     : m_bIsBusy(false), m_bIsConnected(false)
 {
     assert(nMotor <= 6); // 6 for model D
+    DEBUG_PRINT("Slush Motor %d initialized", nMotor);
 
     m_nMotorNumber = nMotor;
     m_bUseSpiBusy = bUseSPI;

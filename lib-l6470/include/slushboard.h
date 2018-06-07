@@ -35,14 +35,18 @@
 
 #define FATAL(str)                                             \
     do {                                                       \
-        fprintf(stderr, "Error at line %d, file %s (%d)\n",    \
-                __LINE__, __FILE__, errno);                    \
+        fprintf(stderr, "Error at line %d, file %s\n",         \
+                __LINE__, __FILE__);                           \
         perror(str); exit(1);                                  \
     } while (0)
 
+
+/**
+ * DEBUG_PRINT will be enabled by cmake
+ */
 #ifdef DEBUG
  #define DEBUG_PRINT(fmt, args...) fprintf(stderr, \
-    "DEBUG: %s:%d:%s(): " fmt, __FILE__, __LINE__, __func__, ##args)
+    "DEBUG: %s(): " fmt "\n" , __func__, ##args)
 #else
  #define DEBUG_PRINT(fmt, args...) do {} while (0)
 #endif

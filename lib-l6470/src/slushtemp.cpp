@@ -29,12 +29,11 @@
 #include <stdint.h>
 #include <math.h>
 
-#include "bcm2835.h"
 
 #if defined(__linux__)
 #elif defined(__circle__)
 #else
- #include "bcm2835_i2c.h"
+#include "bcm2835_i2c.h"
 #endif
 
 #include "slushboard.h"
@@ -46,24 +45,27 @@
 #define THERMISTOR_REF_TEMP			298.15
 #define THERMISTOR_REF_RESISTANCE	50000
 
-uint16_t SlushBoard::getTempRaw(void) {
-	uint8_t buf[2] = { 0, 0 };
+uint16_t SlushBoard::getTempRaw(void)
+{
+    uint8_t buf[2] = { 0, 0 };
 
-	bcm2835_i2c_setSlaveAddress(MAX1164_I2C_ADDRESS);
-	bcm2835_i2c_setClockDivider(BCM2835_I2C_CLOCK_DIVIDER_626);
-	(void) bcm2835_i2c_read((char *) buf, (uint32_t) 2);
+    // bcm2835_i2c_setSlaveAddress(MAX1164_I2C_ADDRESS);
+    // bcm2835_i2c_setClockDivider(BCM2835_I2C_CLOCK_DIVIDER_626);
+    // (void) bcm2835_i2c_read((char *) buf, (uint32_t) 2);
 
-	return (uint16_t) ((uint16_t) buf[0] << 8 | (uint16_t) buf[1]);
+    return (uint16_t) ((uint16_t) buf[0] << 8 | (uint16_t) buf[1]);
 }
 
-float SlushBoard::getTemprature(void) {
-	return calcTemp(getTempRaw());
+float SlushBoard::getTemprature(void)
+{
+    return calcTemp(getTempRaw());
 }
 
-float SlushBoard::calcTemp(uint16_t tempraw) {
-	float voltage = (float) tempraw / 1024 * 5;
-	float resistance = (float) POTENTIAL_DIVIDER_RESISTOR / (5 / voltage - 1);
-	float temp = (float) 1 / (1 / THERMISTOR_REF_TEMP + logf(resistance / THERMISTOR_REF_RESISTANCE) / THERMISTOR_B_VALUE);
+float SlushBoard::calcTemp(uint16_t tempraw)
+{
+    float voltage = (float) tempraw / 1024 * 5;
+    float resistance = (float) POTENTIAL_DIVIDER_RESISTOR / (5 / voltage - 1);
+    float temp = (float) 1 / (1 / THERMISTOR_REF_TEMP + logf(resistance / THERMISTOR_REF_RESISTANCE) / THERMISTOR_B_VALUE);
 
-	return temp - 273.15;
+    return temp - 273.15;
 }

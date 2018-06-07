@@ -216,8 +216,8 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
                      unsigned char bytes_num)
 {
     /* Points to the Tx and Rx buffer */
-    transfer_spidev1.tx_buf = (unsigned long)send;
-    transfer_spidev1.rx_buf = (unsigned long)receive;
+    transfer_spidev1.tx_buf = (unsigned long) send;
+    transfer_spidev1.rx_buf = (unsigned long) receive;
 
     /* Override No. of bytes per transaction */
     transfer_spidev1.len = bytes_num;
@@ -246,8 +246,8 @@ unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
     transfer_spidev1.len = SPI_ONE_BYTE;
 
     /* Points to the address of Tx and Rx variable  */
-    transfer_spidev1.tx_buf = (unsigned long)&data_byte;
-    transfer_spidev1.rx_buf = (unsigned long)&rec_byte;
+    transfer_spidev1.tx_buf = (unsigned long) &data_byte;
+    transfer_spidev1.rx_buf = (unsigned long) &rec_byte;
 
     /* Perform an SPI Transaction */
     if (ioctl(SPI_device1.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev1) < 0) {
