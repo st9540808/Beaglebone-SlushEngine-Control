@@ -4,7 +4,8 @@
 #ifndef FATAL
  #define FATAL(str)                                             \
      do {                                                       \
-         fprintf(stderr, str "errno %d, file %s (%d)\n",        \
+         fprintf(stderr, str "\n"                               \
+                 "errno %d, file %s (%d)\n",                    \
                  errno, __FILE__, __LINE__);                    \
          exit(1);                                               \
      } while (0)

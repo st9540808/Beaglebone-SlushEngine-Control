@@ -89,6 +89,8 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
         break;
     }
 
+    mSpiChipSelect.set();
+
     if (getParam(L6470_PARAM_CONFIG) == 0x2e88) {
         DEBUG_PRINT("Motor Drive Connected on GPIO %s\n", mPin.location);
         
