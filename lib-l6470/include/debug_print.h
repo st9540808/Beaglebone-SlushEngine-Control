@@ -6,7 +6,7 @@
      do {                                                       \
          fprintf(stderr, "errno %d, file %s (%d)\n",            \
                  errno, __FILE__, __LINE__);                    \
-         perror(str); exit(1);                                  \
+         exit(1);                                               \
      } while (0)
 #endif
 

@@ -134,7 +134,7 @@ int SlushMotor::busyCheck(void)
 
 uint8_t SlushMotor::SPIXfer(uint8_t data)
 {
-    char dataPacket[1];
+    unsigned char dataPacket[1];
 
     dataPacket[0] = (unsigned char) data;
 
@@ -146,7 +146,11 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
     // bcm2835_spi_transfern(dataPacket, 1);
     // bcm2835_gpio_set(m_nSpiChipSelect);
 
-    return (uint8_t) SPIDEV1_single_transfer(dataPacket[0]);
+    mSpiChipSelect.clear();
+    dataPacket[0] = SPIDEV1_single_transfer(dataPacket[0]);
+    mSpiChipSelect.set();
+
+    return (uint8_t) dataPacket[0];
 }
 
 /*
