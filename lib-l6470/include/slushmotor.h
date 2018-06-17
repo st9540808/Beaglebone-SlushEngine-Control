@@ -33,12 +33,14 @@
 #include <stdbool.h>
 
 #include "l6470.h"
+#include "gpio_pin.h"
+#include "debug_print.h"
 
 class SlushMotor: public L6470
 {
 public:
     SlushMotor(int, bool bUseSPI = true);
-    ~SlushMotor(void);
+    ~SlushMotor(void) override;
 
     int busyCheck(void);
 
@@ -64,7 +66,8 @@ private:
     uint8_t SPIXfer(uint8_t);
 
 private:
-    int m_nSpiChipSelect;
+    GPIO_Pin mSpiChipSelect;
+    PIN mPin;
     int m_nBusyPin;
     bool m_bUseSpiBusy;
     bool m_bIsBusy;

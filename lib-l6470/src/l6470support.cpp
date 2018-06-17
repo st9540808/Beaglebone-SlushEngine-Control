@@ -332,6 +332,10 @@ long L6470::paramHandler(uint8_t param, unsigned long value)
     case L6470_PARAM_STATUS:  // STATUS is a read-only register
         retVal = xferParam(0, 16);
         break;
+    // L6480 CONFIG Register address
+    case L6480_PARAM_CONFIG:
+        retVal = xferParam(value, 16);
+        break;
     default:
         SPIXfer((uint8_t) value);
         break;
@@ -346,7 +350,7 @@ typedef union {
 
 long L6470::xferParam(unsigned long nValue, uint8_t nBitLength)
 {
-#ifndef NDEBUG
+#ifdef DEBUG
     printf("%s value = %ld, bitLen = %d\n", __FUNCTION__, nValue, (int) nBitLength);
 #endif
     _cast in;

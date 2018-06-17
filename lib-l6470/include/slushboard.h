@@ -32,24 +32,13 @@
 #include <stdint.h>
 #include <errno.h>
 #include <stdlib.h>
-
-#define FATAL(str)                                             \
-    do {                                                       \
-        fprintf(stderr, "Error at line %d, file %s\n",         \
-                __LINE__, __FILE__);                           \
-        perror(str); exit(1);                                  \
-    } while (0)
-
+#include "gpio_pin.h"
 
 /**
  * DEBUG_PRINT will be enabled by cmake
  */
-#ifdef DEBUG
- #define DEBUG_PRINT(fmt, args...) fprintf(stderr, \
-    "DEBUG: %s(): " fmt "\n" , __func__, ##args)
-#else
- #define DEBUG_PRINT(fmt, args...) do {} while (0)
-#endif
+#include "debug_print.h"
+
 
 enum TSlushIOPorts {
     SLUSH_IO_PORTA = 0,
@@ -84,10 +73,12 @@ enum TSlushIOFSel {
 #define SLUSH_MTR2_BUSY			18
 #define SLUSH_MTR3_BUSY			19
 
-#define SLUSH_MTR0_CHIPSELECT	24 // RPI_V2_GPIO_P1_24
-#define SLUSH_MTR1_CHIPSELECT	25
-#define SLUSH_MTR2_CHIPSELECT	26
-#define SLUSH_MTR3_CHIPSELECT	27
+#define SLUSH_MTR0_CHIPSELECT	P8_7 // 24 // RPI_V2_GPIO_P1_24
+#define SLUSH_MTR1_CHIPSELECT	P8_8 // 25
+#define SLUSH_MTR2_CHIPSELECT	P8_9 // 26
+#define SLUSH_MTR3_CHIPSELECT	P8_10 // 27
+#define SLUSH_MTR4_CHIPSELECT	P8_11 // 28
+#define SLUSH_MTR5_CHIPSELECT	P8_12 // 29
 
 #define SLUSH_MTR_FLAG			13
 
