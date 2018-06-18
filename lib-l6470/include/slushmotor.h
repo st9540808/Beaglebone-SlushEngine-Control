@@ -39,6 +39,7 @@
 class SlushMotor: public L6470
 {
 public:
+    SlushMotor() = delete;
     SlushMotor(int, bool bUseSPI = true);
     ~SlushMotor(void);
 

@@ -45,7 +45,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
     : m_bIsBusy(false), m_bIsConnected(false)
 {
     assert(nMotor <= 6); // 6 for model D
-    DEBUG_PRINT("Slush Motor %d initialized", nMotor);
+    DEBUG_PRINT("Slush Motor %d initializing...", nMotor);
 
     m_nMotorNumber = nMotor;
     m_bUseSpiBusy = bUseSPI;
