@@ -6,7 +6,7 @@
 int main(int argc, char const *argv[])
 {
     SlushBoard board;
-    SlushMotor motor(3);
+    SlushMotor motor(0);
 
     return 0;
 }

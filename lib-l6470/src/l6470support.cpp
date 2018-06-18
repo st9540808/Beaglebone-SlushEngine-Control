@@ -28,11 +28,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#ifndef NDEBUG
-#include <stdio.h>
-#endif
 
 #include "l6470.h"
+#include "debug_print.h"
 
 static unsigned long ceil(float f)
 {
@@ -350,9 +348,8 @@ typedef union {
 
 long L6470::xferParam(unsigned long nValue, uint8_t nBitLength)
 {
-#ifdef DEBUG
-    printf("%s() value = %ld, bitLen = %d\n", __FUNCTION__, nValue, (int) nBitLength);
-#endif
+    DEBUG_PRINT("value = %ld, bitLen = %d\n", nValue, (int) nBitLength);
+    
     _cast in;
     _cast out;
 

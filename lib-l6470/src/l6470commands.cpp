@@ -39,7 +39,7 @@ void L6470::setParam(TL6470ParamRegisters param, unsigned long value)
 
 long L6470::getParam(TL6470ParamRegisters param)
 {
-    printf("DEBUG: %d", SPIXfer((uint8_t) param | L6470_CMD_GET_PARAM));
+    SPIXfer((uint8_t) param | L6470_CMD_GET_PARAM);
 
     return paramHandler(param, 0);
 }
