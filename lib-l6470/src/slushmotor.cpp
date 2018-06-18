@@ -112,7 +112,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
 
         m_bIsConnected = true;
     } else {
-        DEBUG_PRINT("recived %u", getParam(L6480_PARAM_CONFIG));
+        DEBUG_PRINT("received %ld", getParam(L6480_PARAM_CONFIG));
         FATAL("communication issues; check SPI configuration and cables");
     }
 }

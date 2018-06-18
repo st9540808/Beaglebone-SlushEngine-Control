@@ -9,7 +9,8 @@ GPIO_Pin::GPIO_Pin()
     , MAP_MASK(MAP_SIZE - 1)
 {}
 
-void GPIO_Pin::init(PIN p) {
+void GPIO_Pin::init(PIN p)
+{
     int fd;
     
     this->bank = p.bank_id;
@@ -30,8 +31,7 @@ void GPIO_Pin::init(PIN p) {
     case GPIO2: 
         if ((*(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL) & 0x3) == 0)
                 *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL) = 0x2;
-            DEBUG_PRINT("%#010x\n",
-                        *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL));
+            DEBUG_PRINT("%#010x", *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL));
         
         if (!GPIO2_base) {
             GPIO2_base = (uint8_t *) mmap(0, 4096, PROT_READ | PROT_WRITE,
@@ -53,7 +53,7 @@ void GPIO_Pin::init(PIN p) {
     case GPIO1:
         if (!GPIO1_base) {
             GPIO1_base = (uint8_t *) mmap(0, 4096, PROT_READ | PROT_WRITE,
-                                            MAP_SHARED, fd, GPIO1 & ~MAP_MASK);
+                                          MAP_SHARED, fd, GPIO1 & ~MAP_MASK);
             if (GPIO1_base == (uint8_t *) -1)
                 FATAL("failed mmap on CM_PER");
 
@@ -75,10 +75,12 @@ void GPIO_Pin::init(PIN p) {
     close(fd);
 }
 
-void GPIO_Pin::set(void) {
+void GPIO_Pin::set(void)
+{
     *(uint32_t *)(SETDATAOUT_addr) = 1 << this->bank;
 }
 
-void GPIO_Pin::clear(void) {
+void GPIO_Pin::clear(void)
+{
     *(uint32_t *)(CLEARDATAOUT_addr) = 1 << this->bank;
 }

@@ -87,7 +87,7 @@ enum TL6470ParamRegisters {
     L6470_PARAM_ALARM_EN = 0x17,	///< len=8
     L6470_PARAM_CONFIG = 0x18,		///< len=16
     L6470_PARAM_STATUS = 0x19,		///< len=16
-    L6480_PARAM_CONFIG = 0x20       ///< len=16
+    L6480_PARAM_CONFIG = 0x1A       ///< len=16
 };
 
 class L6470
