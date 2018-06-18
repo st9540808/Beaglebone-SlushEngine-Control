@@ -351,7 +351,7 @@ typedef union {
 long L6470::xferParam(unsigned long nValue, uint8_t nBitLength)
 {
 #ifdef DEBUG
-    printf("%s value = %ld, bitLen = %d\n", __FUNCTION__, nValue, (int) nBitLength);
+    printf("%s() value = %ld, bitLen = %d\n", __FUNCTION__, nValue, (int) nBitLength);
 #endif
     _cast in;
     _cast out;

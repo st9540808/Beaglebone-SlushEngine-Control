@@ -153,6 +153,8 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
     mSpiChipSelect.clear();
     dataPacket[0] = SPIDEV1_single_transfer(dataPacket[0]);
     mSpiChipSelect.set();
+    
+    DEBUG_PRINT("send: %u, recv: %u", data, dataPacket[0]);
 
     return (uint8_t) dataPacket[0];
 }
