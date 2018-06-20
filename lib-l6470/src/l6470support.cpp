@@ -334,6 +334,9 @@ long L6470::paramHandler(uint8_t param, unsigned long value)
     case L6480_PARAM_CONFIG:
         retVal = xferParam(value, 16);
         break;
+    case L6480_PARAM_STATUS:
+        retVal = xferParam(0, 24);
+        break;
     default:
         SPIXfer((uint8_t) value);
         break;
