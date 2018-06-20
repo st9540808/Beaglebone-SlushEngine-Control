@@ -12,7 +12,6 @@ int main(int argc, char const *argv[])
     SlushBoard board;
     SlushMotor axis1(0);
 
-
     axis1.resetDev();
 
     // #move the motor in one direction and wait for it to finish

@@ -94,7 +94,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
     }
 
     if (getParam(L6470_PARAM_CONFIG) == 0x2e88) {
-        DEBUG_PRINT("Motor Drive Connected on GPIO %s\n", mPin.location);
+        DEBUG_PRINT("Motor Drive Connected on GPIO %s", mPin.location);
         
         setOverCurrent(2000);
         setMicroSteps(16);
@@ -105,7 +105,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
 
         m_bIsConnected = true;
     } else if (getParam(L6480_PARAM_CONFIG) == 0x2c88) {
-        DEBUG_PRINT("Motor Drive Connected on GPIO %s\n", mPin.location);
+        DEBUG_PRINT("High power motor Drive Connected on GPIO %s", mPin.location);
         setCurrent(100, 120, 140, 140);
         setMicroSteps(16);
 
@@ -155,7 +155,7 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
     dataPacket[0] = SPIDEV1_single_transfer(dataPacket[0]);
     mSpiChipSelect.set();
     
-    // DEBUG_PRINT("send: %u, recv: %u", data, dataPacket[0]);
+    DEBUG_PRINT("send: %u, recv: %u", data, dataPacket[0]);
 
     return (uint8_t) dataPacket[0];
 }
