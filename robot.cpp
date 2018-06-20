@@ -21,13 +21,15 @@ int main(int argc, char const *argv[])
     std::printf("%d\n", axis1.isBusy());
     std::puts("");
 
+    std::printf("move()\n");
     axis1.move(stepmove);
-    while (axis1.isBusy()) ;
-    axis1.move(-stepmove);
+    std::puts("");
+    
+    // while (axis1.isBusy()) ;
+    // axis1.move(-stepmove);
     // #when these operations are finished shut off the motor
-    while (axis1.isBusy()) ;
+    // while (axis1.isBusy()) ;
 
-    sleep(8);
     axis1.free();
     return 0;
 }
