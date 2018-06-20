@@ -40,6 +40,7 @@ extern "C" {
 
 #include "l6470constants.h"
 #include "gpio_pin.h"
+
 extern GPIO_Pin motor_SPI_CS[7];
 
 SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
@@ -154,7 +155,7 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
     dataPacket[0] = SPIDEV1_single_transfer(dataPacket[0]);
     mSpiChipSelect.set();
     
-    DEBUG_PRINT("send: %u, recv: %u", data, dataPacket[0]);
+    // DEBUG_PRINT("send: %u, recv: %u", data, dataPacket[0]);
 
     return (uint8_t) dataPacket[0];
 }
