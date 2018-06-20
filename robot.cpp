@@ -12,6 +12,7 @@ int main(int argc, char const *argv[])
     SlushBoard board;
     SlushMotor axis1(0);
 
+    axis1.resetDev();
     axis1.setMicroSteps(2);
     axis1.setMaxSpeed(200);
 

@@ -84,9 +84,9 @@ SlushBoard::SlushBoard(void)
     // udelay(10000);
     
     MTR_RESET.clear();
-    usleep(10000);
+    usleep(100000);
     MTR_RESET.set();
-    usleep(10000);
+    usleep(100000);
 
     // bcm2835_gpio_fsel(SLUSH_MCP23017_RESET, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_set(SLUSH_MCP23017_RESET);
@@ -96,7 +96,10 @@ SlushBoard::SlushBoard(void)
 }
 
 SlushBoard::~SlushBoard(void)
-{}
+{
+    for (int i = 0; i <= 6; i++)
+        motor_SPI_CS[i].clear();
+}
 
 void SlushBoard::InitSpi(void)
 {
