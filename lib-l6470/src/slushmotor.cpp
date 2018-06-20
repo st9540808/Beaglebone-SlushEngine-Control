@@ -45,9 +45,9 @@ extern GPIO_Pin motor_SPI_CS[7];
 SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
     : m_bIsBusy(false)
     , m_bIsConnected(false)
-    , mSpiChipSelect(motor_SPI_CS[nMotor])
+    // 6 for model D
+    , mSpiChipSelect((assert(nMotor >= 0 && nMotor <= 6), motor_SPI_CS[nMotor]))
 {
-    assert(nMotor >= 0 && nMotor <= 6); // 6 for model D
     DEBUG_PRINT("Slush Motor %d initializing...", nMotor);
 
     m_nMotorNumber = nMotor;
