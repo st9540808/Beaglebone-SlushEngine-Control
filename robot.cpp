@@ -12,16 +12,21 @@ int main(int argc, char const *argv[])
     SlushBoard board;
     SlushMotor axis1(0);
 
+    std::printf("reserDev()\n");
     axis1.resetDev();
+    std::puts("");
 
     // #move the motor in one direction and wait for it to finish
-    while (axis1.isBusy()) ;
-    axis1.move(stepmove);
-    while (axis1.isBusy()) ;
-    axis1.move(-stepmove);
-    // #when these operations are finished shut off the motor
-    while (axis1.isBusy()) ;
+    std::printf("isBusy()\n");
+    std::printf("%d\n", axis1.isBusy());
+    std::puts("");
+    // axis1.move(stepmove);
+    // while (axis1.isBusy()) ;
+    // axis1.move(-stepmove);
+    // // #when these operations are finished shut off the motor
+    // while (axis1.isBusy()) ;
 
+    sleep(8);
     axis1.free();
     return 0;
 }
