@@ -110,7 +110,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
         setCurrent(100, 120, 140, 140);
         setMicroSteps(16);
 
-        getStatus();
+        DEBUG_PRINT("getStatus(): %d\n" getStatus());
         this->free();
 
         m_bIsConnected = true;
