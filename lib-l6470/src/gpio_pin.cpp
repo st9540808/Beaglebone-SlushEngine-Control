@@ -72,7 +72,7 @@ void GPIO_Pin::init(PIN p)
         break;
 
     default:
-        FATAL("wrong PIN");
+        FATAL("GPIO0 and GPIO3 are not supported");
     }
 
     DEBUG_PRINT("PIN %s initialized", p.location);

@@ -134,13 +134,12 @@ int SlushMotor::busyCheck(void)
             return 1;
         }
     } else
-        FATAL("m_bUseSpiBusy should not be false, use SpiBust");
+        FATAL("m_bUseSpiBusy should not be false, use SpiBusy");
 }
 
 uint8_t SlushMotor::SPIXfer(uint8_t data)
 {
     unsigned char dataPacket[1];
-
     dataPacket[0] = (unsigned char) data;
 
     // bcm2835_spi_chipSelect(BCM2835_SPI_CS_NONE);
