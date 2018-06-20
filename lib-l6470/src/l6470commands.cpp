@@ -179,6 +179,7 @@ void L6470::resetPos()
 void L6470::resetDev()
 {
     SPIXfer(L6470_CMD_RESET_DEVICE);
+    setParam(L6480_PARAM_CONFIG, 0x3608u);
 }
 
 void L6470::softStop()
