@@ -173,7 +173,7 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
 
 int SlushMotor::isBusy(void)
 {
-    return !busyCheck();
+    return busyCheck();
 }
 
 void SlushMotor::setAsHome(void)
