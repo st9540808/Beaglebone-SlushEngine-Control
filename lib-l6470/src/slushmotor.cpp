@@ -133,17 +133,15 @@ int SlushMotor::busyCheck(void)
         FATAL("m_bUseSpiBusy should not be false, use SpiBusy");
     
     if (mUseL6480) {
-        if (getParam(L6480_PARAM_STATUS) & L6470_STATUS_BUSY) {
+        if (getParam(L6480_PARAM_STATUS) & L6470_STATUS_BUSY)
             return 0;
-        } else {
+        else
             return 1;
-        }
     } else {
-        if (getParam(L6470_PARAM_STATUS) & L6470_STATUS_BUSY) {
+        if (getParam(L6470_PARAM_STATUS) & L6470_STATUS_BUSY)
             return 0;
-        } else {
+        else
             return 1;
-        }
     }
 }
 
@@ -175,7 +173,7 @@ uint8_t SlushMotor::SPIXfer(uint8_t data)
 
 int SlushMotor::isBusy(void)
 {
-    return busyCheck();
+    return !busyCheck();
 }
 
 void SlushMotor::setAsHome(void)
