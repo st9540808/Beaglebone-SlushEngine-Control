@@ -48,6 +48,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
     , m_bIsConnected(false)
     // 6 for model D
     , mSpiChipSelect((assert(nMotor >= 0 && nMotor <= 6), motor_SPI_CS[nMotor]))
+    , mUseL6480(nMotor >= 0 && nMotor <= 2 ? true : false)
 {
     DEBUG_PRINT("Slush Motor %d initializing...", nMotor);
 
@@ -128,14 +129,22 @@ SlushMotor::~SlushMotor(void)
 
 int SlushMotor::busyCheck(void)
 {
-    if (m_bUseSpiBusy) {
+    if (!m_bUseSpiBusy)
+        FATAL("m_bUseSpiBusy should not be false, use SpiBusy");
+    
+    if (mUseL6480) {
+        if (getParam(L6480_PARAM_STATUS) & L6470_STATUS_BUSY) {
+            return 0;
+        } else {
+            return 1;
+        }
+    } else {
         if (getParam(L6470_PARAM_STATUS) & L6470_STATUS_BUSY) {
             return 0;
         } else {
             return 1;
         }
-    } else
-        FATAL("m_bUseSpiBusy should not be false, use SpiBusy");
+    }
 }
 
 uint8_t SlushMotor::SPIXfer(uint8_t data)

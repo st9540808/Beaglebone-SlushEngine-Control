@@ -69,6 +69,7 @@ private:
 private:
     GPIO_Pin& mSpiChipSelect;
     PIN mPin;
+    bool mUseL6480;
     int m_nBusyPin;
     bool m_bUseSpiBusy;
     bool m_bIsBusy;
