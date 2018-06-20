@@ -8,13 +8,12 @@ extern "C" {
 
 int main(int argc, char const *argv[])
 {
-    const int stepmove = 300000;// #the number of steps we want to be moving
+    const int stepmove = 1000;// #the number of steps we want to be moving
     SlushBoard board;
     SlushMotor axis1(0);
 
-    std::printf("reserDev()\n");
-    axis1.resetDev();
-    std::puts("");
+    axis1.setMicroSteps(2);
+    axis1.setMaxSpeed(200);
 
     // #move the motor in one direction and wait for it to finish
     std::printf("isBusy()\n");
