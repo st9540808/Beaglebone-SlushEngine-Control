@@ -107,10 +107,12 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
         m_bIsConnected = true;
     } else if (getParam(L6480_PARAM_CONFIG) == 0x2c88) {
         DEBUG_PRINT("High power motor Drive Connected on GPIO %s", mPin.location);
+
+        setParam(L6480_PARAM_CONFIG, 0x3608);
         setCurrent(100, 120, 140, 140);
         setMicroSteps(16);
 
-        DEBUG_PRINT("getStatus(): %d\n" getStatus());
+        DEBUG_PRINT("getStatus(): %d\n", getStatus());
         this->free();
 
         m_bIsConnected = true;
