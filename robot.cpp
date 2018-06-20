@@ -26,7 +26,11 @@ int main(int argc, char const *argv[])
     std::puts("");
     
     while (axis1.isBusy()) ;
+
+    std::printf("move()\n");
     axis1.move(-stepmove);
+    std::puts("");
+    
     // #when these operations are finished shut off the motor
     while (axis1.isBusy()) ;
 
