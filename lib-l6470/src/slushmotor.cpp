@@ -112,7 +112,7 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
         setCurrent(100, 120, 140, 140);
         setMicroSteps(16);
 
-        DEBUG_PRINT("getStatus(): %#010x\n", getStatus());
+        DEBUG_PRINT("getStatus(): %#4x", getStatus());
         this->free();
 
         m_bIsConnected = true;
@@ -134,17 +134,8 @@ int SlushMotor::busyCheck(void)
     if (!m_bUseSpiBusy)
         FATAL("m_bUseSpiBusy should not be false, use SpiBusy");
     
-    if (mUseL6480) {
-        if (getParam(L6480_PARAM_STATUS) & L6470_STATUS_BUSY)
-            return 0;
-        else
-            return 1;
-    } else {
-        if (getParam(L6470_PARAM_STATUS) & L6470_STATUS_BUSY)
-            return 0;
-        else
-            return 1;
-    }
+    int status = getStatus();
+    return !(status & 0x2);
 }
 
 uint8_t SlushMotor::SPIXfer(uint8_t data)
