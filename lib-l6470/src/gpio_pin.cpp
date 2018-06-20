@@ -34,7 +34,7 @@ void GPIO_Pin::init(PIN p)
     case GPIO2: 
         if ((*(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL) & 0x3) == 0)
                 *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL) = 0x2;
-            DEBUG_PRINT("%#010x", *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL));
+        // DEBUG_PRINT("%#010x", *(uint32_t *)(CM_PER_base + CM_PER_GPIO2_CLKCTRL));
         
         if (!GPIO2_base) {
             GPIO2_base = (uint8_t *) mmap(0, 4096, PROT_READ | PROT_WRITE,
@@ -75,6 +75,8 @@ void GPIO_Pin::init(PIN p)
         FATAL("wrong PIN");
     }
 
+    DEBUG_PRINT("PIN %s initialized", p.location);
+    
     close(fd);
 }
 
