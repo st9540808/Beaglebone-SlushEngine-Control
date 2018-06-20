@@ -4,6 +4,9 @@ volatile uint8_t* GPIO_Pin::CM_PER_base = nullptr;
 volatile uint8_t* GPIO_Pin::GPIO2_base = nullptr;
 volatile uint8_t* GPIO_Pin::GPIO1_base = nullptr;
 
+GPIO_Pin motor_SPI_CS[7];
+GPIO_Pin MTR_RESET;
+
 GPIO_Pin::GPIO_Pin()
     : MAP_SIZE(sysconf(_SC_PAGESIZE))
     , MAP_MASK(MAP_SIZE - 1)

@@ -40,11 +40,14 @@ extern "C" {
 
 #include "l6470constants.h"
 #include "gpio_pin.h"
+extern GPIO_Pin motor_SPI_CS[7];
 
 SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
-    : m_bIsBusy(false), m_bIsConnected(false)
+    : m_bIsBusy(false)
+    , m_bIsConnected(false)
+    , mSpiChipSelect(motor_SPI_CS[nMotor])
 {
-    assert(nMotor <= 6); // 6 for model D
+    assert(nMotor >= 0 && nMotor <= 6); // 6 for model D
     DEBUG_PRINT("Slush Motor %d initializing...", nMotor);
 
     m_nMotorNumber = nMotor;
@@ -52,44 +55,42 @@ SlushMotor::SlushMotor(int nMotor, bool bUseSPI)
 
     switch (nMotor) {
     case 0:
-        mSpiChipSelect.init(SLUSH_MTR0_CHIPSELECT);
         mPin = SLUSH_MTR0_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR0_CHIPSELECT);
         // m_nBusyPin = SLUSH_MTR0_BUSY;
         break;
     case 1:
-        mSpiChipSelect.init(SLUSH_MTR1_CHIPSELECT);
         mPin = SLUSH_MTR1_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR1_CHIPSELECT);
         // m_nBusyPin = SLUSH_MTR1_BUSY;
         break;
     case 2:
-        mSpiChipSelect.init(SLUSH_MTR2_CHIPSELECT);
         mPin = SLUSH_MTR2_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR2_CHIPSELECT);
         // m_nBusyPin = SLUSH_MTR2_BUSY;
         break;
     case 3:
-        mSpiChipSelect.init(SLUSH_MTR3_CHIPSELECT);
         mPin = SLUSH_MTR3_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR3_CHIPSELECT);
         // m_nBusyPin = SLUSH_MTR3_BUSY;
         break;
     case 4:
-        mSpiChipSelect.init(SLUSH_MTR4_CHIPSELECT);
         mPin = SLUSH_MTR4_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR4_CHIPSELECT);
         break;
     case 5:
-        mSpiChipSelect.init(SLUSH_MTR5_CHIPSELECT);
         mPin = SLUSH_MTR5_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR5_CHIPSELECT);
         break;
     case 6:
-        FATAL("motor 6 not implemented");
+        mPin = SLUSH_MTR6_CHIPSELECT;
         break;
     default:
-        mSpiChipSelect.init(SLUSH_MTR0_CHIPSELECT);
         mPin = SLUSH_MTR0_CHIPSELECT;
+        // mSpiChipSelect.init(SLUSH_MTR0_CHIPSELECT);
         // m_nBusyPin = SLUSH_MTR0_BUSY;
         break;
     }
-
-    mSpiChipSelect.set();
 
     if (getParam(L6470_PARAM_CONFIG) == 0x2e88) {
         DEBUG_PRINT("Motor Drive Connected on GPIO %s\n", mPin.location);

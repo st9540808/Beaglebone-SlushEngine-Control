@@ -26,15 +26,18 @@
  * THE SOFTWARE.
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <assert.h>
+extern "C" {
+    #include <stdint.h>
+    #include <stdio.h>
+    #include <assert.h>
+    #include <unistd.h>
+    #include "SPI.h"
+}
 
 #include "slushboard.h"
 
-extern "C" {
-    #include "SPI.h"
-}
+extern GPIO_Pin motor_SPI_CS[7];
+extern GPIO_Pin MTR_RESET;
 
 SlushBoard::SlushBoard(void)
 {
@@ -46,16 +49,28 @@ SlushBoard::SlushBoard(void)
 
     // bcm2835_gpio_fsel(SLUSH_L6470_RESET, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_set(SLUSH_L6470_RESET);
+    MTR_RESET.init(SLUSH_L6470_RESET);
 
     // bcm2835_gpio_fsel(SLUSH_MTR0_CHIPSELECT, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_fsel(SLUSH_MTR1_CHIPSELECT, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_fsel(SLUSH_MTR2_CHIPSELECT, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_fsel(SLUSH_MTR3_CHIPSELECT, BCM2835_GPIO_FSEL_OUTP);
+    
+    motor_SPI_CS[0].init(SLUSH_MTR0_CHIPSELECT);
+    motor_SPI_CS[1].init(SLUSH_MTR1_CHIPSELECT);
+    motor_SPI_CS[2].init(SLUSH_MTR2_CHIPSELECT);
+    motor_SPI_CS[3].init(SLUSH_MTR3_CHIPSELECT);
+    motor_SPI_CS[4].init(SLUSH_MTR4_CHIPSELECT);
+    motor_SPI_CS[5].init(SLUSH_MTR5_CHIPSELECT);
+    motor_SPI_CS[6].init(SLUSH_MTR6_CHIPSELECT);
 
     // bcm2835_gpio_set(SLUSH_MTR0_CHIPSELECT);
     // bcm2835_gpio_set(SLUSH_MTR1_CHIPSELECT);
     // bcm2835_gpio_set(SLUSH_MTR2_CHIPSELECT);
     // bcm2835_gpio_set(SLUSH_MTR3_CHIPSELECT);
+
+    for (int i = 0; i <= 6; i++)
+        motor_SPI_CS[i].set();
 
     // bcm2835_gpio_fsel(SLUSH_MTR0_BUSY, BCM2835_GPIO_FSEL_INPT);
     // bcm2835_gpio_fsel(SLUSH_MTR1_BUSY, BCM2835_GPIO_FSEL_INPT);
@@ -66,6 +81,11 @@ SlushBoard::SlushBoard(void)
     // udelay(10000);
     // bcm2835_gpio_set(SLUSH_L6470_RESET);
     // udelay(10000);
+    
+    MTR_RESET.clear();
+    usleep(10000);
+    MTR_RESET.set();
+    usleep(10000);
 
     // bcm2835_gpio_fsel(SLUSH_MCP23017_RESET, BCM2835_GPIO_FSEL_OUTP);
     // bcm2835_gpio_set(SLUSH_MCP23017_RESET);

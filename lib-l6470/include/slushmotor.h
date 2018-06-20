@@ -67,7 +67,7 @@ private:
     uint8_t SPIXfer(uint8_t);
 
 private:
-    GPIO_Pin mSpiChipSelect;
+    GPIO_Pin& mSpiChipSelect;
     PIN mPin;
     int m_nBusyPin;
     bool m_bUseSpiBusy;

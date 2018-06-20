@@ -35,8 +35,9 @@
 #define P8_10 ((PIN){  "P8_10",  "TIMER6",      GPIO2,     68, 	4})
 #define P8_11 ((PIN){  "P8_11",  "GPIO1_13",    GPIO1,     45, 	13})
 #define P8_12 ((PIN){  "P8_12",  "GPIO1_12",    GPIO1,     44, 	12})
-#define P8_14 ((PIN){  "P8_14",  "GPIO0_26",    GPIO0,     26, 	26})
+// #define P8_14 ((PIN){  "P8_14",  "GPIO0_26",    GPIO0,     26, 	26})
 #define P8_15 ((PIN){  "P8_15",  "GPIO1_15",    GPIO1,     47, 	15})
+#define P8_16 ((PIN){  "P8_16",  "GPIO1_14",    GPIO1,     46, 	14})
 
 struct PIN {
     const char* location;

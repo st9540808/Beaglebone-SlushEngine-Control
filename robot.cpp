@@ -9,7 +9,7 @@ extern "C" {
 int main(int argc, char const *argv[])
 {
     GPIO_Pin pin;
-    pin.init(P8_15);
+    pin.init(P8_16);
 
     for (int i = 0; i < 20; i++) {
         pin.set();
