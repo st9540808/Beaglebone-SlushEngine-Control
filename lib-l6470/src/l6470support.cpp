@@ -348,7 +348,7 @@ typedef union {
 
 long L6470::xferParam(unsigned long nValue, uint8_t nBitLength)
 {
-    DEBUG_PRINT("value = %ld, bitLen = %d\n", nValue, (int) nBitLength);
+    DEBUG_PRINT("value = %ld, bitLen = %d", nValue, (int) nBitLength);
     
     _cast in;
     _cast out;

@@ -29,12 +29,14 @@
 #define GPIO_DATAOUT      (0x13C)
 #define GPIO_DATAIN       (0x138)
 
-#define P8_7  ((PIN){  "P8_7"   ,"TIMER4",      GPIO2,     66, 	2})
-#define P8_8  ((PIN){  "P8_8"   ,"TIMER7",      GPIO2,     67, 	3})
-#define P8_9  ((PIN){  "P8_9"   ,"TIMER5",      GPIO2,     69, 	5})
-#define P8_10 ((PIN){  "P8_10"  ,"TIMER6",      GPIO2,     68, 	4})
-#define P8_11 ((PIN){  "P8_11"  ,"GPIO1_13",    GPIO1,     45, 	13})
-#define P8_12 ((PIN){  "P8_12"  ,"GPIO1_12",    GPIO1,     44, 	12})
+#define P8_7  ((PIN){  "P8_7",   "TIMER4",      GPIO2,     66, 	2})
+#define P8_8  ((PIN){  "P8_8",   "TIMER7",      GPIO2,     67, 	3})
+#define P8_9  ((PIN){  "P8_9",   "TIMER5",      GPIO2,     69, 	5})
+#define P8_10 ((PIN){  "P8_10",  "TIMER6",      GPIO2,     68, 	4})
+#define P8_11 ((PIN){  "P8_11",  "GPIO1_13",    GPIO1,     45, 	13})
+#define P8_12 ((PIN){  "P8_12",  "GPIO1_12",    GPIO1,     44, 	12})
+#define P8_14 ((PIN){  "P8_14",  "GPIO0_26",    GPIO0,     26, 	26})
+#define P8_15 ((PIN){  "P8_15",  "GPIO1_15",    GPIO1,     47, 	15})
 
 struct PIN {
     const char* location;
