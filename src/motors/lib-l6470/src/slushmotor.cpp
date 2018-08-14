@@ -211,3 +211,15 @@ void SlushMotor::SetUseSpiBusy(bool bUseSpiBusy)
 {
     m_bUseSpiBusy = bUseSpiBusy;
 }
+
+void SlushMotor::join_busywait(void)
+{
+    while (this->isBusy())
+        ;
+}
+
+void SlushMotor::join(long sleepFor)
+{
+    while (this->isBusy())
+        usleep(sleepFor);
+}

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.4)
 
 project(l6470 CXX)
 set(CMAKE_CXX_STANDARD 11)
-add_definitions(-DDEBUG=1) # enable debug print
 
 file(GLOB SOURCE src/*.cpp)
 

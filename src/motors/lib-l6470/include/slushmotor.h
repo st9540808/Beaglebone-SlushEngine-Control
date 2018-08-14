@@ -63,6 +63,12 @@ public:
     void SetUseSpiBusy(bool);
     bool IsConnected(void) const;
 
+    /*
+     * Wait for motor to stop
+     */
+    void join_busywait(void);
+    void join(long = 50);
+
 private:
     uint8_t SPIXfer(uint8_t);
 

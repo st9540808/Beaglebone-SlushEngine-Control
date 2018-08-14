@@ -6,19 +6,25 @@ project(motors)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED)
 set(GLOB SOURCE *.cpp)
+#add_definitions(-DDEBUG=1) # enable debug print
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2" CACHE STRING "Set C++ Compiler Flags" FORCE)
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2" CACHE STRING "Set C Compiler Flags" FORCE)
+
 
 set(CMAKE_CXX_STANDARD 11)
 add_subdirectory(BeagleBone-SPI-Library)
 add_subdirectory(lib-l6470)
-#add_subdirectory(lib-PWM)
+add_subdirectory(lib-Servo)
 include_directories(
     ${l6470_INCLUDE_DIRS}
+    ${Servo_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
 )
-message(${l6470_INCLUDE_DIRS})
+message(${Servo_INCLUDE_DIRS})
 add_library(motors)
 #add_dependencies(allBuild BeagleBone-SPI-Library lib-l6470)
-target_link_libraries(motors l6470)
+target_link_libraries(motors l6470 Servo)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)

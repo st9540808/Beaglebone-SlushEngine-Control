@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
     moveo_moveit
 )
 
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -latomic")
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -125,8 +127,15 @@ include_directories(
 # add_dependencies(listener ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
+add_library(mytimer mytimer.cpp)
 add_executable(listener_node robot.cpp)
-target_link_libraries(listener_node ${catkin_LIBRARIES})
+add_executable(gripper gripper.cpp)
+add_executable(steppers steppers.cpp)
+add_executable(single single.cpp)
+target_link_libraries(listener_node ${catkin_LIBRARIES} mytimer)
+target_link_libraries(gripper ${catkin_LIBRARIES})
+target_link_libraries(steppers ${catkin_LIBRARIES} mytimer)
+target_link_libraries(single ${catkin_LIBRARIES} mytimer)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
