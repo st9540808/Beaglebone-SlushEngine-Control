@@ -132,10 +132,12 @@ add_executable(listener_node robot.cpp)
 add_executable(gripper gripper.cpp)
 add_executable(steppers steppers.cpp)
 add_executable(single single.cpp)
+add_executable(shoulder shoulder.cpp)
 target_link_libraries(listener_node ${catkin_LIBRARIES} mytimer)
 target_link_libraries(gripper ${catkin_LIBRARIES})
 target_link_libraries(steppers ${catkin_LIBRARIES} mytimer)
 target_link_libraries(single ${catkin_LIBRARIES} mytimer)
+target_link_libraries(shoulder ${catkin_LIBRARIES} mytimer)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

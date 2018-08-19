@@ -67,22 +67,22 @@ int main(int argc, char const *argv[])
 
     axis0.resetDev();
     axis0.setMicroSteps(16);
-    axis0.setMaxSpeed(200);
+    axis0.setMaxSpeed(300);
     axis1.resetDev();
     axis1.setMicroSteps(16);
-    axis1.setMaxSpeed(40);
+    axis1.setMaxSpeed(50);
     axis1_2.resetDev();
     axis1_2.setMicroSteps(16);
-    axis1_2.setMaxSpeed(40);
+    axis1_2.setMaxSpeed(50);
     axis2.resetDev();
     axis2.setMicroSteps(16);
     axis2.setMaxSpeed(750);
     axis3.resetDev();
     axis3.setMicroSteps(16);
-    axis3.setMaxSpeed(60);
+    axis3.setMaxSpeed(45);
     axis4.resetDev();
     axis4.setMicroSteps(16);
-    axis4.setMaxSpeed(200);
+    axis4.setMaxSpeed(300);
 
     // #move the motor in one direction and wait for it to finish
     std::printf("move()\n");
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
     axis1.goTo(1500);
     axis1_2.goTo(-1500);
     axis2.goTo(-20000);
-    axis3.goTo(600);
+    axis3.goTo(-800);
     axis4.goTo(1500);
     mytimer_end();
     std::printf("time: %f\n", mytimer_diff());
