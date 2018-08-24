@@ -43,7 +43,7 @@ void joint_steps_Callback(const moveo_moveit::ArmJointState& arm_steps)
     position2 = remap_shoulder_steps(arm_steps.position2);
     position3 = -arm_steps.position3;
     position4 = arm_steps.position4;
-    position5 = arm_steps.position5;
+    position5 = -arm_steps.position5;
     joint_status.store(true);
 }
 

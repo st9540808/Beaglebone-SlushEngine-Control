@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
     }
     
     SlushBoard board;
-    SlushMotor axis1(1);
+    SlushMotor axis1(4);
     SlushMotor axis3(3);
 
     axis3.resetDev();
@@ -30,11 +30,11 @@ int main(int argc, char const *argv[])
 
     axis1.resetDev();
     axis1.setMicroSteps(4);
-    axis1.setMaxSpeed(35);
+    axis1.setMaxSpeed(100);
 
-    //axis1.setAccKVAL(75);
-    //axis1.setDecKVAL(75);
-    //axis1.setRunKVAL(60);
+    axis1.setAccKVAL(53);
+    axis1.setDecKVAL(53);
+    axis1.setRunKVAL(47);
     axis1.setAcc(300);
     axis1.setDec(300);
     std::printf("Hold: %d, Run: %d, Acc: %d, Dec: %d\n", axis1.getHoldKVAL(),
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
     std::fflush(stdout);
    
 	mytimer_start();
-    axis1.goTo(-500);
+    axis1.goTo(-450);
     mytimer_end();
     std::printf("time: %f\n", mytimer_diff());
 
@@ -59,3 +59,4 @@ int main(int argc, char const *argv[])
 
     return 0;
 }
+

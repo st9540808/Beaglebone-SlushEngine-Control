@@ -5,12 +5,7 @@ int main(int argc, char *argv[])
 {
     Servo gripper;
     
-    gripper.write(0);
-    sleep(1);
-    gripper.detach();
-    sleep(1);
-
-    gripper.write(60);
+    gripper.write(45);
     sleep(1);
     gripper.detach();
     sleep(1);
@@ -20,7 +15,7 @@ int main(int argc, char *argv[])
     gripper.detach();
     sleep(1);
 
-    gripper.write(0);
+    gripper.setOrigin();
     sleep(1);
 
     return 0;

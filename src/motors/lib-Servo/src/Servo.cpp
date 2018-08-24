@@ -37,8 +37,19 @@ int Servo::write(int angle)
     
     if (!this->attached)
         ret = this->attach();
-    ret = PWM_EHRPWM1A_set_duty_cycle(duty_cycle);
+    ret += PWM_EHRPWM1A_set_duty_cycle(duty_cycle);
 
+    return ret;
+}
+
+int Servo::setOrigin(void)
+{
+    int ret;
+    
+    if (!this->attached)
+        ret = this->attach();
+    ret += PWM_EHRPWM1A_set_duty_cycle(450000);
+    
     return ret;
 }
 

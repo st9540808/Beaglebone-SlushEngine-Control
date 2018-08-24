@@ -11,9 +11,10 @@ class Servo {
 public:
     Servo();
     ~Servo();
-    int attach();
-    int detach();
+    int attach(void);
+    int detach(void);
     int write(int angle);
+    int setOrigin(void);
 };
 
 #endif
