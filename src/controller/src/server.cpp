@@ -60,24 +60,15 @@ public:
         , allAxesPtr({&axis0, &axis1_1, &axis1_2, &axis2, &axis3, &axis4})
         , allJointsPtr({&axis0, &axis1_1, &axis2, &axis3, &axis4})
     {
-        axis0.resetDev();
+        for (auto axisPtr : allAxesPtr)
+            axisPtr->resetDev();
         axis0.setMicroSteps(16);
-        axis0.setMaxSpeed(150);
-        axis1_1.resetDev();
         axis1_1.setMicroSteps(SHOULDER_MICROSTEPS);
-        axis1_1.setMaxSpeed(35);
-        axis1_2.resetDev();
         axis1_2.setMicroSteps(SHOULDER_MICROSTEPS);
-        axis1_2.setMaxSpeed(35);
-        axis2.resetDev();
         axis2.setMicroSteps(16);
-        axis2.setMaxSpeed(200);
-        axis3.resetDev();
         axis3.setMicroSteps(16);
-        axis3.setMaxSpeed(45);
-        axis4.resetDev();
         axis4.setMicroSteps(16);
-        axis4.setMaxSpeed(200);
+        setMaxSpeed({150, 35, 200, 45, 200});
  
         axis1_1.setAccKVAL(73);
         axis1_1.setDecKVAL(73);
@@ -94,6 +85,17 @@ public:
 
         for (auto axisPtr : allAxesPtr)
             axisPtr->hardStop();
+    }
+
+    void setMaxSpeed(std::vector<int> spd)
+    {
+        if (spd.size() != 5) {
+            ROS_ERROR("wrong size in spd: %d", spd.size());
+            return;
+        }
+        spd.insert(spd.begin()+1, spd[1]);
+        for (int i = 0; i < 6; i++)
+            allAxesPtr[i]->setMaxSpeed(spd[i]);
     }
 
     void move(const std::vector<double>& from, const std::vector<double>& to)
@@ -120,10 +122,8 @@ public:
             posTo[i] = posFrom[i] + armSteps[i];
         }
 
-        ROS_INFO("posFrom: %d %d %d %d %d",
-                 posFrom[0], posFrom[1], posFrom[2], posFrom[3], posFrom[4]);
-        ROS_INFO("posTo: %d %d %d %d %d",
-                 posTo[0], posTo[1], posTo[2], posTo[3], posTo[4]);
+        ROS_INFO("posFrom: %d %d %d %d %d", posFrom[0], posFrom[1], posFrom[2], posFrom[3], posFrom[4]);
+        ROS_INFO("posTo: %d %d %d %d %d", posTo[0], posTo[1], posTo[2], posTo[3], posTo[4]);
 
         std::transform(posTo.begin(), posTo.end(), remapFunc.begin(), remapped.begin(),
             [](int pos, const std::function<int(int)>& remap) { return remap(pos); }
@@ -146,6 +146,7 @@ public:
     {
         for (auto axisPtr : allAxesPtr)
             axisPtr->softStop();
+        join();
     }
 
     // check all joints has stopped
@@ -162,29 +163,31 @@ public:
             long absPos = restoreFunc[jointNum](axis->getPos());
             double diff = curTo[jointNum] - curFrom[jointNum];
             return curFrom[jointNum] + (
-                       (double) (absPos - posFrom[jointNum]) /
-                       std::max((posTo[jointNum] - posFrom[jointNum]), 1) // no nan
+                       (double) std::abs(absPos - posFrom[jointNum]) /
+                       std::max(std::abs(posTo[jointNum] - posFrom[jointNum]), 1)
+                       // using max to prevent divide by zero
                    ) * diff;
         };
         
         state.positions.resize(5);
-        std::transform(allJointsPtr.begin(), allJointsPtr.end(),
+        std::transform(
+            allJointsPtr.begin(), allJointsPtr.end(),
             std::vector<int>({0, 1, 2, 3, 4}).begin(), state.positions.begin(),
             [&](SlushMotor* axis, int jointNum) { return step2rad(axis, jointNum); }
         );
 
         state.velocities.resize(5);
-        std::transform(allJointsPtr.begin(), allJointsPtr.end(), state.velocities.begin(),
+        std::transform(
+            allJointsPtr.begin(), allJointsPtr.end(), state.velocities.begin(),
             [](SlushMotor* axis) -> double { return axis->getCurrentSpeed(); }
         );             
 
-        /*
         std::cout << "pos: ";
         for (auto pos : state.positions)  std::cout << pos << " ";
         std::cout << "\n";
         std::cout << "vec: ";
         for (auto spd : state.velocities) std::cout << spd << " ";
-        std::cout << "\n";*/
+        std::cout << "\n";
 
         return this->state;
     }
@@ -276,12 +279,12 @@ public:
             ROS_INFO("%s: Succeeded", action_name_.c_str());
             // set the action state to succeeded
             as_.setSucceeded(result_);
-            pubToJointStatePublisher(goal->trajectory.points.back());
+            pubToJointStatePublisher(arm.getCurrentState());
         } else {
             result_.error_code = 0;
             ROS_WARN("failed in executeCB");
             as_.setPreempted(result_);
-            pubToJointStatePublisher(goal->trajectory.points[i]);
+            pubToJointStatePublisher(arm.getCurrentState());
         }
     }
 };
