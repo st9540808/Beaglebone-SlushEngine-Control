@@ -55,7 +55,7 @@ private:
 public:
     MultiStepper(void)
         : stepsPerRevolution({32800, 18000, 72000, 3200, 14400, 0})
-        , posFrom(6, 0), posTo(6, 0)
+        , posFrom(5, 0), posTo(5, 0)
         , axis0(0), axis1_1(1), axis1_2(2), axis2(3), axis3(4), axis4(5)
         , allAxesPtr({&axis0, &axis1_1, &axis1_2, &axis2, &axis3, &axis4})
         , allJointsPtr({&axis0, &axis1_1, &axis2, &axis3, &axis4})
@@ -178,12 +178,13 @@ public:
             [](SlushMotor* axis) -> double { return axis->getCurrentSpeed(); }
         );             
 
+        /*
         std::cout << "pos: ";
         for (auto pos : state.positions)  std::cout << pos << " ";
         std::cout << "\n";
         std::cout << "vec: ";
         for (auto spd : state.velocities) std::cout << spd << " ";
-        std::cout << "\n";
+        std::cout << "\n";*/
 
         return this->state;
     }
