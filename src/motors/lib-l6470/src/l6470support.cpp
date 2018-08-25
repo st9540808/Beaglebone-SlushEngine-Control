@@ -79,6 +79,13 @@ float L6470::decParse(unsigned long stepsPerSecPerSec)
     return (float) (stepsPerSecPerSec & 0x00000FFF) / 0.137438;
 }
 
+// available range from 0 to 15625 steps/s
+// resolution is around 0.015 steps/s
+float L6470::currentSpdParse(unsigned long stepsPerTick)
+{
+    return (float) (stepsPerTick & 0x000FFFFF) * 0.01490116;
+}
+
 // The value in the MAX_SPD register is [(steps/s)*(tick)]/(2^-18) where tick is
 //  250ns (datasheet value)- 0x041 on boot.
 // Multiply desired steps/s by .065536 to get an appropriate value for this register

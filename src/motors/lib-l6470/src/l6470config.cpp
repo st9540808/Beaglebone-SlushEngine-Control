@@ -64,6 +64,11 @@ void L6470::setMaxSpeed(float stepsPerSecond)
     setParam(L6470_PARAM_MAX_SPEED, integerSpeed);
 }
 
+float L6470::getCurrentSpeed(void)
+{
+    return currentSpdParse(getParam(L6470_PARAM_SPEED));
+}
+
 float L6470::getMaxSpeed(void)
 {
     return maxSpdParse(getParam(L6470_PARAM_MAX_SPEED));

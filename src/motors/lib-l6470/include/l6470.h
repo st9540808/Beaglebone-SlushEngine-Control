@@ -134,6 +134,7 @@ public:
 
     bool getLoSpdOpt(void);
     uint8_t getStepMode(void);
+    float getCurrentSpeed(void);
     float getMaxSpeed(void);
     float getMinSpeed(void);
     float getFullSpeed(void);
@@ -214,6 +215,7 @@ private:
 
     float accParse(unsigned long);
     float decParse(unsigned long);
+    float currentSpdParse(unsigned long);
     float minSpdParse(unsigned long);
     float maxSpdParse(unsigned long);
     float FSParse(unsigned long);
