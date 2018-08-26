@@ -70,14 +70,8 @@ public:
         axis4.setMicroSteps(16);
         setMaxSpeed({150, 35, 200, 45, 200});
  
-        axis1_1.setAccKVAL(73);
-        axis1_1.setDecKVAL(73);
-        axis1_1.setRunKVAL(65);
-        axis1_1.setHoldKVAL(55);
-        axis1_2.setAccKVAL(73);
-        axis1_2.setDecKVAL(73);
-        axis1_2.setRunKVAL(65);
-        axis1_2.setHoldKVAL(55);
+        setKVAL(&axis1_1, {55, 65, 73, 73});
+        setKVAL(&axis1_2, {55, 65, 73, 73});
         axis1_1.setAcc(100);
         axis1_1.setDec(100);
         axis1_2.setAcc(100);
@@ -96,6 +90,18 @@ public:
         spd.insert(spd.begin()+1, spd[1]);
         for (int i = 0; i < 6; i++)
             allAxesPtr[i]->setMaxSpeed(spd[i]);
+    }
+
+    void setKVAL(SlushMotor* axis, const std::vector<int>& kval)
+    {
+        if (kval.size() != 4) {
+            ROS_ERROR("wrong size in kval: %d", kval.size());
+            return;
+        }
+        axis->setHoldKVAL(kval[0]);
+        axis->setRunKVAL(kval[1]);
+        axis->setAccKVAL(kval[2]);
+        axis->setDecKVAL(kval[3]);
     }
 
     void move(const std::vector<double>& from, const std::vector<double>& to)
@@ -168,33 +174,46 @@ public:
                        // using max to prevent divide by zero
                    ) * diff;
         };
+        auto _2angular = [this](SlushMotor* axis, int jointNum) -> double {
+            double stepsPerSec =
+                       std::abs(restoreFunc[jointNum](axis->getCurrentSpeed()));
+            return stepsPerSec / stepsPerRevolution[jointNum] * (2.*M_PI);
+        };
+        static const std::array<int, 5> jointNums {0, 1, 2, 3, 4};
         
         state.positions.resize(5);
         std::transform(
-            allJointsPtr.begin(), allJointsPtr.end(),
-            std::vector<int>({0, 1, 2, 3, 4}).begin(), state.positions.begin(),
+            allJointsPtr.begin(), allJointsPtr.end(), jointNums.begin(),
+            state.positions.begin(),
             [&](SlushMotor* axis, int jointNum) { return step2rad(axis, jointNum); }
         );
 
         state.velocities.resize(5);
         std::transform(
-            allJointsPtr.begin(), allJointsPtr.end(), state.velocities.begin(),
-            [](SlushMotor* axis) -> double { return axis->getCurrentSpeed(); }
+            allJointsPtr.begin(), allJointsPtr.end(), jointNums.begin(),
+            state.velocities.begin(),
+            [&](SlushMotor* axis, int jointNum) { return _2angular(axis, jointNum); }
         );             
 
-        std::cout << "pos: ";
-        for (auto pos : state.positions)  std::cout << pos << " ";
-        std::cout << "\n";
-        std::cout << "vec: ";
-        for (auto spd : state.velocities) std::cout << spd << " ";
-        std::cout << "\n";
+        std::printf("pos: ");
+        for (auto pos : state.positions) {
+            if (pos >= 0) std::printf(" %-8.4f ", pos);
+            else std::printf("%-9.4f ", pos);
+        }
+        std::printf("\n");
+        std::printf("vec: ");
+        for (auto spd : state.velocities) {
+            if (spd >= 0) std::printf(" %-8.4f ", spd);
+            else std::printf("%-9.4f ", spd);
+        }
+        std::printf("\n");
 
         return this->state;
     }
 };
 
 
-class MoveoController {
+class ArmController {
 protected:
     ros::NodeHandle nh_;
     // NodeHandle instance must be created before this line. Otherwise strange error occurs.
@@ -212,8 +231,8 @@ protected:
     MultiStepper arm;
 
 public:
-    MoveoController(std::string name) :
-        as_(nh_, name, boost::bind(&MoveoController::executeCB, this, _1), false),
+    ArmController(std::string name) :
+        as_(nh_, name, boost::bind(&ArmController::executeCB, this, _1), false),
         action_name_(name),
         controllerJointStatesPub_(nh_.advertise<sensor_msgs::JointState>(
                 "/move_group/fake_controller_joint_states", 10
@@ -224,7 +243,7 @@ public:
         as_.start();
     }
 
-    ~MoveoController(void)
+    ~ArmController(void)
     {}
 
     void pubToJointStatePublisher(const trajectory_msgs::JointTrajectoryPoint& point)
@@ -301,7 +320,7 @@ int main(int argc, char* argv[])
     ROS_INFO("in main function");
     
     ros::init(argc, argv, "moveo_arm_controller");
-    MoveoController controller("moveo_arm_controller/follow_joint_trajectory");
+    ArmController armController("moveo_arm_controller/follow_joint_trajectory");
     ros::Rate r(10);
 
     while (ros::ok()) {
