@@ -79,6 +79,7 @@ float L6470::decParse(unsigned long stepsPerSecPerSec)
     return (float) (stepsPerSecPerSec & 0x00000FFF) / 0.137438;
 }
 
+// The value in the SPEED register is [(steps/s)*(tick)]/(2^-28)
 // available range from 0 to 15625 steps/s
 // resolution is around 0.015 steps/s
 float L6470::currentSpdParse(unsigned long stepsPerTick)

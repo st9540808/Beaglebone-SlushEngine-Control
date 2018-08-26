@@ -24,7 +24,6 @@ extern "C" {
 
 class MultiStepper {
 private:
-    const std::vector<int> stepsPerRevolution;
     std::vector<int> posFrom, posTo;    // stepper positions (unit: step)
     std::vector<double> curFrom, curTo; // positions in radius
     
@@ -51,24 +50,22 @@ private:
         [](int steps) { return  steps; },
         [](int steps) { return -steps; },
     };
+    // using 1/16 micro steps
+    const std::vector<int> stepsPerRevolution {32800, 18000, 72000, 3200, 14400, 0};
+    const std::vector<int>   microSteps {16, SHOULDER_MICROSTEPS, 16, 16, 16};
+    const std::vector<float> defaultSpd {150, 35, 300, 45, 200};
 
 public:
     MultiStepper(void)
-        : stepsPerRevolution({32800, 18000, 72000, 3200, 14400, 0})
-        , posFrom(5, 0), posTo(5, 0)
+        : posFrom(5, 0), posTo(5, 0)
         , axis0(0), axis1_1(1), axis1_2(2), axis2(3), axis3(4), axis4(5)
         , allAxesPtr({&axis0, &axis1_1, &axis1_2, &axis2, &axis3, &axis4})
         , allJointsPtr({&axis0, &axis1_1, &axis2, &axis3, &axis4})
     {
         for (auto axisPtr : allAxesPtr)
             axisPtr->resetDev();
-        axis0.setMicroSteps(16);
-        axis1_1.setMicroSteps(SHOULDER_MICROSTEPS);
-        axis1_2.setMicroSteps(SHOULDER_MICROSTEPS);
-        axis2.setMicroSteps(16);
-        axis3.setMicroSteps(16);
-        axis4.setMicroSteps(16);
-        setMaxSpeed({150, 35, 200, 45, 200});
+        setMicroSteps(this->microSteps);
+        setMaxSpeed(this->defaultSpd);
  
         setKVAL(&axis1_1, {55, 65, 73, 73});
         setKVAL(&axis1_2, {55, 65, 73, 73});
@@ -81,10 +78,21 @@ public:
             axisPtr->hardStop();
     }
 
-    void setMaxSpeed(std::vector<int> spd)
+    void setMicroSteps(std::vector<int> stp)
+    {
+        if (stp.size() != 5) {
+            ROS_ERROR("wrong size in microSteps: %d", stp.size());
+            return;
+        }
+        stp.insert(stp.begin()+1, stp[1]);
+        for (int i = 0; i < 6; i++)
+            allAxesPtr[i]->setMicroSteps(stp[i]);
+    }
+
+    void setMaxSpeed(std::vector<float> spd)
     {
         if (spd.size() != 5) {
-            ROS_ERROR("wrong size in spd: %d", spd.size());
+            ROS_ERROR("wrong size in speed: %d", spd.size());
             return;
         }
         spd.insert(spd.begin()+1, spd[1]);
@@ -106,7 +114,7 @@ public:
 
     void move(const std::vector<double>& from, const std::vector<double>& to)
     {
-        std::array<int, 6> armSteps, remapped;
+        std::vector<int> armSteps(5), remapped(5);
         
         curFrom = from;
         curTo = to;
@@ -131,15 +139,57 @@ public:
         ROS_INFO("posFrom: %d %d %d %d %d", posFrom[0], posFrom[1], posFrom[2], posFrom[3], posFrom[4]);
         ROS_INFO("posTo: %d %d %d %d %d", posTo[0], posTo[1], posTo[2], posTo[3], posTo[4]);
 
-        std::transform(posTo.begin(), posTo.end(), remapFunc.begin(), remapped.begin(),
+        std::transform(
+            posTo.begin(), posTo.end(), remapFunc.begin(), remapped.begin(),
             [](int pos, const std::function<int(int)>& remap) { return remap(pos); }
         );
+        setMaxSpeed(defaultSpd);
+        setMaxSpeed(calculateSpd(armSteps));
         axis0.goTo(remapped[0]);
         axis1_1.goTo(remapped[1]);
         axis1_2.goTo(-remapped[1]);
         axis2.goTo(remapped[2]);
         axis3.goTo(remapped[3]);
         axis4.goTo(remapped[4]);
+    }
+
+    std::vector<float> calculateSpd(std::vector<int> armSteps)
+    {
+        float acc[4], dec[4], spd[4], longestTime = .0f;
+        SlushMotor* axes[4] = { &axis0, &axis1_1, &axis2, &axis4 };
+        std::vector<float> newSpd(4);
+
+        // exclude axis3
+        armSteps.erase(armSteps.begin()+3);
+        for (int i = 0; i < 4; i++)
+            armSteps[i] = std::abs(armSteps[i] / 16);
+
+        for (int i = 0; i < 4; i++) {
+            acc[i] = axes[i]->getAcc();
+            dec[i] = axes[i]->getDec();
+            spd[i] = axes[i]->getMaxSpeed();
+            ROS_INFO("axis%d: %f %f %f", i, acc[i], dec[i], spd[i]);
+        }
+        for (int i = 0; i < 4; i++) {
+            float thisTime = (spd[i]/acc[i] + spd[i]/dec[i])/2 +
+                             (float) armSteps[i]/spd[i];
+            longestTime = std::max(thisTime, longestTime);
+            ROS_INFO("axis%d thisTime: %f", i, thisTime);
+        }
+        ROS_INFO("longestTime: %f", longestTime);
+
+        if (longestTime > .0f) {
+            for (int i = 0; i < 4; i++) {
+                newSpd[i] = (float) armSteps[i] / longestTime;
+                newSpd[i] = std::min(newSpd[i], 300.0f); // safety check
+            }
+            
+            newSpd.insert(newSpd.begin()+3, defaultSpd[3]);
+            ROS_INFO("newSpd: %f %f %f %f %f",
+                      newSpd[0], newSpd[1], newSpd[2], newSpd[3], newSpd[4]);
+            return newSpd;
+        }
+        return defaultSpd;
     }
 
     void join(void)
@@ -158,7 +208,8 @@ public:
     // check all joints has stopped
     bool isStopped(void)
     {
-        return std::none_of(allAxesPtr.begin(), allAxesPtr.end(),
+        return std::none_of(
+                   allAxesPtr.begin(), allAxesPtr.end(),
                    [](SlushMotor* axisPtr) { return axisPtr->isBusy(); }
                );
     }
@@ -175,8 +226,7 @@ public:
                    ) * diff;
         };
         auto _2angular = [this](SlushMotor* axis, int jointNum) -> double {
-            double stepsPerSec =
-                       std::abs(restoreFunc[jointNum](axis->getCurrentSpeed()));
+            double stepsPerSec = 16 * axis->getCurrentSpeed();
             return stepsPerSec / stepsPerRevolution[jointNum] * (2.*M_PI);
         };
         static const std::array<int, 5> jointNums {0, 1, 2, 3, 4};
@@ -195,18 +245,27 @@ public:
             [&](SlushMotor* axis, int jointNum) { return _2angular(axis, jointNum); }
         );             
 
-        std::printf("pos: ");
+        std::printf("stepper pos: ");
+        for (auto axis : allJointsPtr)
+            printf("%-6d ", axis->getPos());
+        std::printf("\n");
+        std::printf("stepper vel: ");
+        for (auto axis : allJointsPtr)
+            printf("%-6.2f ", axis->getCurrentSpeed());
+        std::printf("\n");
+        std::printf("joint pos: ");
         for (auto pos : state.positions) {
             if (pos >= 0) std::printf(" %-8.4f ", pos);
             else std::printf("%-9.4f ", pos);
         }
         std::printf("\n");
-        std::printf("vec: ");
+        std::printf("joint vel: ");
         for (auto spd : state.velocities) {
             if (spd >= 0) std::printf(" %-8.4f ", spd);
             else std::printf("%-9.4f ", spd);
         }
         std::printf("\n");
+        std::printf("----------------------------------------------------\n");
 
         return this->state;
     }
