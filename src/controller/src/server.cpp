@@ -39,14 +39,14 @@ private:
     std::vector<std::function<int(int)>> remapFunc = {
         [](int steps) { return  steps; },
         [](int steps) { return  remap_to_shoulder_steps(steps); },
-        [](int steps) { return -steps; },
+        [](int steps) { return  steps; },
         [](int steps) { return  steps; },
         [](int steps) { return -steps; },
     };
     std::vector<std::function<int(int)>> restoreFunc = {
         [](int steps) { return  steps; },
         [](int steps) { return  restore_to_shoulder_pos(steps); },
-        [](int steps) { return -steps; },
+        [](int steps) { return  steps; },
         [](int steps) { return  steps; },
         [](int steps) { return -steps; },
     };
@@ -69,6 +69,7 @@ public:
  
         setKVAL(&axis1_1, {55, 65, 73, 73});
         setKVAL(&axis1_2, {55, 65, 73, 73});
+        setKVAL(&axis4,   {30, 35, 41, 41});
         axis1_1.setAcc(100);
         axis1_1.setDec(100);
         axis1_2.setAcc(100);
@@ -139,10 +140,11 @@ public:
         ROS_INFO("posFrom: %d %d %d %d %d", posFrom[0], posFrom[1], posFrom[2], posFrom[3], posFrom[4]);
         ROS_INFO("posTo: %d %d %d %d %d", posTo[0], posTo[1], posTo[2], posTo[3], posTo[4]);
 
-        std::transform(
-            posTo.begin(), posTo.end(), remapFunc.begin(), remapped.begin(),
-            [](int pos, const std::function<int(int)>& remap) { return remap(pos); }
-        );
+        for (int i = 0; i < 5; i++) {
+            // remap positions
+            remapped[i] = remapFunc[i](posTo[i]);
+        }
+
         setMaxSpeed(defaultSpd);
         setMaxSpeed(calculateSpd(armSteps));
         axis0.goTo(remapped[0]);
@@ -168,13 +170,13 @@ public:
             acc[i] = axes[i]->getAcc();
             dec[i] = axes[i]->getDec();
             spd[i] = axes[i]->getMaxSpeed();
-            ROS_INFO("axis%d: %f %f %f", i, acc[i], dec[i], spd[i]);
+            // ROS_INFO("axis%d: %f %f %f", i, acc[i], dec[i], spd[i]);
         }
         for (int i = 0; i < 4; i++) {
             float thisTime = (spd[i]/acc[i] + spd[i]/dec[i])/2 +
                              (float) armSteps[i]/spd[i];
             longestTime = std::max(thisTime, longestTime);
-            ROS_INFO("axis%d thisTime: %f", i, thisTime);
+            // ROS_INFO("axis%d thisTime: %f", i, thisTime);
         }
         ROS_INFO("longestTime: %f", longestTime);
 
