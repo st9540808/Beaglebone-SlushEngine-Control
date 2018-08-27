@@ -13,10 +13,12 @@ extern "C" {
 
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <std_msgs/UInt16.h>
 
 #include <motors/slushboard.h>
 #include <motors/slushmotor.h>
 #include <motors/gpio_pin.h>
+#include <motors/Servo.h>
 
 #define SHOULDER_MICROSTEPS 2
 #define remap_to_shoulder_steps(pos) ((pos) / (16 / SHOULDER_MICROSTEPS))
@@ -285,21 +287,27 @@ protected:
     control_msgs::FollowJointTrajectoryResult result_;
     
     // publish fake joint states
-    ros::Publisher controllerJointStatesPub_;
     uint32_t seq_;
+    ros::Publisher controllerJointStatesPub_;
+    ros::Subscriber gripperAngleSub_;
 
     // stepper control
     MultiStepper arm;
+    Servo gripper;
 
 public:
-    ArmController(std::string name) :
-        as_(nh_, name, boost::bind(&ArmController::executeCB, this, _1), false),
-        action_name_(name),
-        controllerJointStatesPub_(nh_.advertise<sensor_msgs::JointState>(
+    ArmController(std::string name)
+        : as_(nh_, name, boost::bind(&ArmController::executeCB, this, _1), false)
+        , action_name_(name)
+        , seq_(0)
+        , controllerJointStatesPub_(
+            nh_.advertise<sensor_msgs::JointState>(
                 "/move_group/fake_controller_joint_states", 10
             )
-        ),
-        seq_(0)
+        )
+        , gripperAngleSub_(
+            nh_.subscribe("/gripper/angle", 10, &ArmController::gripperCB, this)
+        )
     {
         as_.start();
     }
@@ -366,6 +374,31 @@ public:
             as_.setPreempted(result_);
             pubToJointStatePublisher(arm.getCurrentState());
         }
+    }
+
+    void gripperCB(const std_msgs::UInt16& cmdAngle)
+    {
+        uint16_t angle = cmdAngle.data;
+        int ret;
+
+        ROS_INFO("execute gripperCB");
+        
+        if (angle == 0) {
+            ret = gripper.setOrigin();
+            if (ret != 0)
+                ROS_ERROR("error in Servo::setOrigin(), ret: %d", ret);
+            
+            ros::WallDuration(1.5).sleep();
+            gripper.detach();
+        } else {
+            ret = gripper.write(angle);
+            if (ret != 0)
+                ROS_ERROR("error in Servo::write(), ret: %d", ret);
+            
+            ros::WallDuration(1.5).sleep();
+        }
+
+        ROS_INFO("gripperCB successfully executed");
     }
 };
 

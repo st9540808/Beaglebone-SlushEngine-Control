@@ -44,7 +44,7 @@ int Servo::write(int angle)
 
 int Servo::setOrigin(void)
 {
-    int ret;
+    int ret = 0;
     
     if (!this->attached)
         ret = this->attach();
