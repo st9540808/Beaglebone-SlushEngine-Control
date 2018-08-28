@@ -381,7 +381,7 @@ public:
         uint16_t angle = cmdAngle.data;
         int ret;
 
-        ROS_INFO("execute gripperCB");
+        ROS_INFO("execute gripperCB, angle: %u", angle);
         
         if (angle == 0) {
             ret = gripper.setOrigin();
